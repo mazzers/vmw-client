@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.larswerkman.lobsterpicker.LobsterPicker
+        android:id="@+id/lobsterpicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+    <com.larswerkman.lobsterpicker.sliders.LobsterShadeSlider
+        android:id="@+id/shadeslider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tagText"
+        android:hint="Enter tag"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/serverIP"
+        android:hint="Server address"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_add"
+        android:text="Close"
+        android:id="@+id/closeButton"/>
+
+    <!--<com.larswerkman.lobsterpicker.sliders.LobsterOpacitySlider-->
+        <!--android:id="@+id/opacityslider"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--app:color_history_enabled="true"-->
+        <!--android:layout_height="wrap_content" />-->
+
+</LinearLayout>
