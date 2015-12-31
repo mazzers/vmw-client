@@ -58,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void initConnection(String tag, int r, int g, int b) throws Exception {
+    private void initConnection(String tag, int r, int g, int b, String address) throws Exception {
         RestTask task = new RestTask(this);
         String request = "?tag=" + tag + "&r=" + r + "&g=" + g + "&b=" + b;
-        String address = "http://192.168.202.1:3456";
+//        String address = "http://192.168.202.1:3456";
         task.execute(request,address);
 
     }
@@ -77,13 +77,14 @@ public class MainActivity extends AppCompatActivity {
         lobsterPicker.addDecorator(shadeSlider);
 
         final EditText editText = (EditText) dialog.findViewById(R.id.tagText);
+        final EditText addressText = (EditText) dialog.findViewById(R.id.serverIP);
         Button dialogButton = (Button) dialog.findViewById(R.id.closeButton);
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editText.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Input tag", Toast.LENGTH_SHORT).show();
+                if (editText.getText().toString().isEmpty()|| addressText.getText().toString().isEmpty() ) {
+                    Toast.makeText(getApplicationContext(), "Input tag/ server address", Toast.LENGTH_SHORT).show();
                 } else {
                     int r = (lobsterPicker.getColor() >> 16) & 0xFF;
                     int g = (lobsterPicker.getColor() >> 8) & 0xFF;
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     String result = "Tag is: " + editText.getText().toString() + " | RGB:(" + r + "," + g + "," + b + ")";
                     Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                     try {
-                        initConnection(editText.getText().toString(), r, g, b);
+                        initConnection(editText.getText().toString(), r, g, b, addressText.getText().toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
