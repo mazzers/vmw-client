@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     ListAdapter listAdapter;
     ListView listView;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,12 +60,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void initConnection(String tag, int r, int g, int b) throws Exception {
+    private void initConnection(String tag, int r, int g, int b, int limit) throws Exception {
         RestTask task = new RestTask(this);
-        String request = "?tag=" + tag + "&r=" + r + "&g=" + g + "&b=" + b;
-        String address = "http://192.168.202.1:3456";
+        String request = "?tag=" + tag + "&r=" + r + "&g=" + g + "&b=" + b + "&limit=" + limit;
+        String address = "http://10.0.0.6:3456";
         task.execute(request,address);
-
     }
 
     private void showSearchDialogue() {
@@ -76,22 +77,27 @@ public class MainActivity extends AppCompatActivity {
 
         lobsterPicker.addDecorator(shadeSlider);
 
-        final EditText editText = (EditText) dialog.findViewById(R.id.tagText);
-        Button dialogButton = (Button) dialog.findViewById(R.id.closeButton);
+        final EditText tagText = (EditText) dialog.findViewById(R.id.tagText);
+        final EditText outputLimitText = (EditText) dialog.findViewById(R.id.output_limit);
+        Button searchButton = (Button) dialog.findViewById(R.id.searchButton);
         // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editText.getText().toString().isEmpty()) {
+                if (tagText.getText().toString().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Input tag", Toast.LENGTH_SHORT).show();
                 } else {
                     int r = (lobsterPicker.getColor() >> 16) & 0xFF;
                     int g = (lobsterPicker.getColor() >> 8) & 0xFF;
                     int b = (lobsterPicker.getColor()) & 0xFF;
-                    String result = "Tag is: " + editText.getText().toString() + " | RGB:(" + r + "," + g + "," + b + ")";
+                    String result = "Tag is: " + tagText.getText().toString() + " | RGB:(" + r + "," + g + "," + b + ")";
                     Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                    int limit = 10;
+                    if(!outputLimitText.getText().toString().isEmpty()) {
+                        limit = Integer.parseInt(outputLimitText.getText().toString());
+                    }
                     try {
-                        initConnection(editText.getText().toString(), r, g, b);
+                        initConnection(tagText.getText().toString(), r, g, b, limit);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -220,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
                     .withBitmap()
                     .smartSize(true)
                     .intoImageView(imageView);
-            name.setText("Color value: " + imgValues.get(position));
+            name.setText("Color share: " + imgValues.get(position));
 
             return row;
         }

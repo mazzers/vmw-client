@@ -26,15 +26,16 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/serverIP"
-        android:hint="Server address"/>
+        android:id="@+id/output_limit"
+        android:hint="Enter output limit"
+        android:inputType="number"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_menu_add"
-        android:text="Close"
-        android:id="@+id/closeButton"/>
+        android:text="Search"
+        android:id="@+id/searchButton"/>
 
     <!--<com.larswerkman.lobsterpicker.sliders.LobsterOpacitySlider-->
         <!--android:id="@+id/opacityslider"-->
