@@ -28,6 +28,7 @@ import com.larswerkman.lobsterpicker.sliders.LobsterShadeSlider;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private void initConnection(String tag, int r, int g, int b, int limit) throws Exception {
         RestTask task = new RestTask(this);
         String request = "?tag=" + tag + "&r=" + r + "&g=" + g + "&b=" + b + "&limit=" + limit;
-        String address = "http://10.0.0.6:3456";
+        String address = "http://147.32.77.185:3456";
         task.execute(request,address);
     }
 
@@ -182,17 +183,28 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String string) {
             ArrayList<String> urls = new ArrayList<>();
             ArrayList<String> values = new ArrayList<>();
+            ArrayList<String> titles = new ArrayList<>();
+            ArrayList<String> owners = new ArrayList<>();
+            ArrayList<String> postedDates = new ArrayList<>();
             try {
                 JSONArray jsonArray = new JSONArray(string);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     String addr = object.getString("photoUrl");
                     String value = object.getString("colorShare");
+                    String title = object.getString("title");
+                    String owner = object.getString("owner");
+                    if(owner.isEmpty()) owner = "FlickrUser";
+                    //String posted = object.getString("posted");
                     urls.add(addr);
                     values.add(value);
+                    titles.add(title);
+                    owners.add(owner);
+                    //postedDates.add(posted);
 //                    System.out.println("Parsed: addr - " + addr + " value: " + value);
                 }
-                listAdapter = new ListAdapter(getApplicationContext(), urls, values);
+                listAdapter = new ListAdapter(getApplicationContext(), urls, values, titles,
+                        owners);
                 listView.setAdapter(listAdapter);
 
             } catch (JSONException e) {
@@ -206,11 +218,18 @@ public class MainActivity extends AppCompatActivity {
         private final Context context;
         private final ArrayList<String> imgUrls;
         private final ArrayList<String> imgValues;
+        private final ArrayList<String> imgTitles;
+        private final ArrayList<String> imgOwners;
+        //private final ArrayList<String> imgPostedDates;
 
-        public ListAdapter(Context context, ArrayList<String> imgUrls, ArrayList<String> imgValues) {
+        public ListAdapter(Context context, ArrayList<String> imgUrls, ArrayList<String> imgValues,
+                           ArrayList<String> imgTitles, ArrayList<String> imgOwners) {
             super(context, R.layout.activity_main, imgValues);
             this.imgValues = imgValues;
             this.imgUrls = imgUrls;
+            this.imgTitles = imgTitles;
+            this.imgOwners = imgOwners;
+            //this.imgPostedDates = imgPostedDates;
             this.context = context;
         }
 
@@ -219,14 +238,22 @@ public class MainActivity extends AppCompatActivity {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
             View row = (View) inflater.inflate(R.layout.listitem, parent, false);
 
-            TextView name = (TextView) row.findViewById(R.id.textView);
+            TextView title = (TextView) row.findViewById(R.id.tv_title);
+            TextView color_share = (TextView) row.findViewById(R.id.tv_color_share);
+            TextView owner = (TextView) row.findViewById(R.id.tv_owner);
+            //TextView posted = (TextView) row.findViewById(R.id.tv_posted_date);
             ImageView imageView = (ImageView) row.findViewById(R.id.imageView);
             Ion.with(context)
                     .load(imgUrls.get(position))
                     .withBitmap()
                     .smartSize(true)
                     .intoImageView(imageView);
-            name.setText("Color share: " + imgValues.get(position));
+            title.setText("Title: " + imgTitles.get(position));
+            color_share.setText("Color share: " + imgValues.get(position));
+            owner.setText("Owner: " + imgOwners.get(position));
+            //posted.setText("Posted on: " + imgPostedDates.get(position));
+
+            //if(position % 2 == 0) row.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_bright));
 
             return row;
         }
